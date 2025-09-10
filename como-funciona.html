@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Como funciona — Fyncode</title>
+  <meta name="description" content="Entenda nosso processo: discovery, design, desenvolvimento, qualidade e evolução contínua." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* ===== Estilos específicos desta página ===== */
+
+    /* header simples com botão de voltar */
+    .topbar .back {
+      padding:10px 14px; border:1px solid var(--glass-border); border-radius:12px; letter-spacing:.12em;
+      background: var(--glass);
+    }
+
+    /* hero */
+    .hero p.lead { max-width: 900px }
+
+    /* KPIs do processo */
+    .kpis{ display:grid; gap:12px; margin-top:18px }
+    .kpi{ background:var(--glass); border:1px solid var(--glass-border); border-radius:14px; padding:14px 16px }
+    .kpi strong{ display:block; letter-spacing:.08em; margin-bottom:6px }
+    .kpi small{ color:var(--muted); letter-spacing:.06em }
+
+    @media (width >= 860px){
+      .kpis{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+    }
+
+    /* fluxo (etapas) */
+    .flow{ counter-reset: step; display:grid; gap:14px; margin-top:20px }
+    @media (width >= 880px){
+      .flow{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+    .flow li{
+      list-style:none; position:relative; overflow:hidden;
+      background:var(--glass); border:1px solid var(--glass-border);
+      border-radius:16px; padding:18px;
+      transition: transform .16s ease, box-shadow .22s ease;
+    }
+    .flow li:hover{ transform: translateY(-2px); box-shadow:0 12px 28px rgba(0,0,0,.35) }
+    .flow li::before{
+      counter-increment: step; content: counter(step);
+      position:absolute; top:14px; right:14px;
+      font-weight:800; font-size:12px; letter-spacing:.14em;
+      padding:8px 10px; border-radius:999px;
+      background: linear-gradient(180deg, rgba(132,53,255,.22), rgba(94,42,232,.18));
+      border:1px solid var(--glass-border);
+    }
+    .flow h3{ margin:0 0 8px; letter-spacing:.08em }
+    .flow p{ margin:0 0 12px; color:var(--muted); letter-spacing:.05em }
+    .flow .meta{ display:flex; gap:10px; flex-wrap:wrap }
+    .flow .meta .chip{ padding:8px 12px; font-weight:700 }
+
+    /* ===== Pills padrão (continua valendo) ===== */
+    .pill{
+      display:inline-block; padding:10px 14px; border-radius:999px;
+      border:1px solid var(--glass-border); background:var(--glass);
+      letter-spacing:.10em; margin:0; font-weight:700; white-space:nowrap;
+    }
+
+    /* ===== MARQUEE / TICKER dos diferenciais ===== */
+    .ticker{
+      display:grid; gap:.6rem; margin-top:14px;
+    }
+    /* container com fade nas bordas */
+    .ticker__lane{
+      --gap: 1rem;
+      --speed: 28s;             /* ajuste de velocidade por faixa */
+      position:relative;
+      overflow:hidden;
+      mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+      border:1px solid var(--glass-border);
+      border-radius:14px;
+      background: var(--glass);
+    }
+    .ticker__lane:hover .ticker__track{ animation-play-state: paused; }
+
+    .ticker__inner{
+      display:flex; gap:var(--gap); padding:10px; /* espaço interno da faixa */
+    }
+
+    /* trilhos duplicados para loop contínuo */
+    .ticker__track{
+      display:inline-flex; gap:var(--gap);
+      align-items:center;
+      animation: ticker var(--speed) linear infinite;
+      will-change: transform;
+    }
+    .ticker__track--reverse{ animation-direction: reverse; }
+
+    @keyframes ticker{
+      from{ transform: translateX(0); }
+      to{ transform: translateX(-50%); } /* metade, pois há 2 trilhos iguais */
+    }
+
+    /* responsividade: aumenta a velocidade em telas muito largas para sensação fluida */
+    @media (width >= 1200px){
+      .ticker__lane{ --speed: 24s; }
+    }
+
+    /* acessibilidade: reduzir movimento se preferido */
+    @media (prefers-reduced-motion: reduce){
+      .ticker__track{ animation: none !important; }
+    }
+
+    /* FAQ */
+    .faq{ margin-top:18px; display:grid; gap:10px }
+    details{
+      background:var(--glass); border:1px solid var(--glass-border); border-radius:14px; padding:14px 16px
+    }
+    summary{
+      cursor:pointer; font-weight:800; letter-spacing:.08em; outline:none;
+      list-style:none;
+    }
+    summary::-webkit-details-marker{ display:none }
+    details p{ color:var(--muted); margin:10px 0 0; letter-spacing:.05em }
+
+    /* CTA final */
+    .cta-stack{ display:flex; gap:12px; flex-wrap:wrap; margin-top:22px }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- fundo aurora -->
+    <div class="plasma" aria-hidden="true"></div>
+
+    <header class="topbar" role="banner">
+      <a class="brand" href="index.html" aria-label="Voltar ao início">
+        <img class="brand-logo" src="img/Logo-03.svg" alt="Fyncode" />
+        <span class="brand-wordmark">
+          <strong class="brand-title">FYNCODE</strong>
+          <small class="brand-sub">TECNOLOGIA E IDENTIDADE</small>
+        </span>
+      </a>
+      <a class="back" href="index.html">← Voltar</a>
+    </header>
+
+    <!-- HERO -->
+    <section class="section hero" aria-labelledby="h-como">
+      <div class="container">
+        <h1 id="h-como">Como funciona</h1>
+        <p class="sub">
+          Da ideia no papel ao <em>go-live</em> com um processo claro, rápido e consultivo —
+          unindo <strong>Tecnologia</strong> e <strong>Identidade</strong> para elevar sua presença digital.
+        </p>
+
+        <div class="kpis">
+          <div class="kpi">
+            <strong>Missão</strong>
+            <small>Criar sites e plataformas que potencializam a presença digital com estética, interação e foco no consumidor.</small>
+          </div>
+          <div class="kpi">
+            <strong>Proposta de Valor</strong>
+            <small>Experiências personalizadas, com visão e propósito, atendimento próximo e foco em resultado.</small>
+          </div>
+          <div class="kpi">
+            <strong>Público-alvo</strong>
+            <small>PMEs, empreendedores e negócios locais que querem atrair clientes pela internet.</small>
+          </div>
+        </div>
+
+        <div class="cta-stack">
+          <a
+            class="btn primary"
+            href="PDF/Passo a passo - como a Fyncode faz seu site.pdf"
+            download="Passo-a-Passo-Fyncode.pdf"
+            type="application/pdf"
+            aria-label="Baixar PDF passo a passo (arquivo: Passo-a-Passo-Fyncode.pdf)"
+          >
+            Baixar PDF passo a passo
+          </a>
+          <a class="btn secondary" href="index.html#para-quem">Ver se é pra mim</a>
+          <a
+            class="btn big animate white"
+            href="https://wa.me/5543998306408?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20falar%20com%20a%20Fyncode."
+            target="_blank" rel="noopener noreferrer"
+            aria-label="Abrir conversa no WhatsApp com a Fyncode"
+          >
+            Entre em contato
+            <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <!-- seta ↗ -->
+              <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="7 7, 17 7, 17 17" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div> <!-- cta-stack -->
+      </div>
+    </section>
+
+    <!-- FLUXO -->
+    <section class="section" aria-labelledby="h-fluxo">
+      <div class="container">
+        <header class="section-head">
+          <h2 id="h-fluxo">Nosso fluxo</h2>
+          <p class="sub">Transparente do primeiro contato à evolução contínua.</p>
+        </header>
+
+        <ol class="flow">
+          <li>
+            <h3>Discovery & Diagnóstico</h3>
+            <p>Entendemos metas, público, oferta e referências. Reunimos requisitos de conteúdo e integrações.</p>
+            <div class="meta">
+              <span class="chip">Briefing</span>
+              <span class="chip">Mapa do site</span>
+              <span class="chip">Canais & integrações</span>
+            </div>
+          </li>
+          <li>
+            <h3>Proposta & Escopo</h3>
+            <p>Alinhamos entregáveis, páginas, prazos e investimento. Definimos KPIs e critérios de sucesso.</p>
+            <div class="meta">
+              <span class="chip">Escopo claro</span>
+              <span class="chip">Timeline</span>
+              <span class="chip">Critérios de aceite</span>
+            </div>
+          </li>
+          <li>
+            <h3>Design (Figma)</h3>
+            <p>UI com estética tecnológica e identidade da marca. Componentes reutilizáveis, microinterações e responsividade.</p>
+            <div class="meta">
+              <span class="chip">Figma</span>
+              <span class="chip">Design System</span>
+              <span class="chip">Protótipo</span>
+            </div>
+          </li>
+          <li>
+            <h3>Desenvolvimento</h3>
+            <p>HTML/CSS/JS enxutos. Performance, SEO on-page e acessibilidade desde o início.</p>
+            <div class="meta">
+              <span class="chip">HTML/CSS/JS</span>
+              <span class="chip">SEO on-page</span>
+              <span class="chip">A11y</span>
+            </div>
+          </li>
+          <li>
+            <h3>QA & Ajustes</h3>
+            <p>Testes multi-dispositivo, Lighthouse, correções e refinamentos. Conteúdo final e checagem legal.</p>
+            <div class="meta">
+              <span class="chip">QA</span>
+              <span class="chip">Cross-browser</span>
+              <span class="chip">Lighthouse</span>
+            </div>
+          </li>
+          <li>
+            <h3>Go-live</h3>
+            <p>Publicação (Github/Vercel/AWS/Hostinger), DNS e monitoramento inicial. Configuração de analytics/pixel se necessário.</p>
+            <div class="meta">
+              <span class="chip">Vercel/AWS/Framer</span>
+              <span class="chip">DNS</span>
+              <span class="chip">Analytics</span>
+            </div>
+          </li>
+          <li>
+            <h3>Evolução contínua</h3>
+            <p>Melhorias, testes A/B e novas seções. Roadmap guiado por dados e feedback do cliente.</p>
+            <div class="meta">
+              <span class="chip">Roadmap</span>
+              <span class="chip">A/B test</span>
+              <span class="chip">Suporte</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- DIFERENCIAIS & VALORES -->
+    <section class="section section-alt" aria-labelledby="h-diferenciais">
+      <div class="container">
+        <header class="section-head">
+          <h2 id="h-diferenciais">Diferenciais & Valores</h2>
+          <p class="sub">Entregando soluções com criatividade e soluções diferentes, com inovação, 
+            trazendo novas tecnologias e conceitos modernos, garantindo qualidade e excelência em 
+            cada projeto.</p>
+        </header>
+
+        <!-- 🔥 ticker com duas faixas: cima → esquerda, baixo → direita -->
+        <div class="ticker" aria-label="Diferenciais e valores">
+          <!-- faixa 1 (esquerda) -->
+          <div class="ticker__lane" aria-label="Faixa de diferenciais rolando">
+            <div class="ticker__inner">
+              <div class="ticker__track">
+                <span class="pill">Tecnologia & Identidade</span>
+                <span class="pill">Atendimento consultivo</span>
+                <span class="pill">Entrega rápida e flexível</span>
+                <span class="pill">Qualidade & Excelência</span>
+                <span class="pill">Inovação constante</span>
+                <span class="pill">Transparência & Confiança</span>
+                <span class="pill">Foco em resultados</span>
+              </div>
+              <!-- duplicata para loop contínuo -->
+              <div class="ticker__track" aria-hidden="true">
+                <span class="pill">Tecnologia & Identidade</span>
+                <span class="pill">Atendimento consultivo</span>
+                <span class="pill">Entrega rápida e flexível</span>
+                <span class="pill">Qualidade & Excelência</span>
+                <span class="pill">Inovação constante</span>
+                <span class="pill">Transparência & Confiança</span>
+                <span class="pill">Foco em resultados</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- faixa 2 (direita) -->
+          <div class="ticker__lane" aria-hidden="true" style="--speed: 30s">
+            <div class="ticker__inner">
+              <div class="ticker__track ticker__track--reverse">
+                <span class="pill">Foco em resultados</span>
+                <span class="pill">Transparência & Confiança</span>
+                <span class="pill">Inovação constante</span>
+                <span class="pill">Qualidade & Excelência</span>
+                <span class="pill">Entrega rápida e flexível</span>
+                <span class="pill">Atendimento consultivo</span>
+                <span class="pill">Tecnologia & Identidade</span>
+              </div>
+              <div class="ticker__track ticker__track--reverse" aria-hidden="true">
+                <span class="pill">Foco em resultados</span>
+                <span class="pill">Transparência & Confiança</span>
+                <span class="pill">Inovação constante</span>
+                <span class="pill">Qualidade & Excelência</span>
+                <span class="pill">Entrega rápida e flexível</span>
+                <span class="pill">Atendimento consultivo</span>
+                <span class="pill">Tecnologia & Identidade</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- fim ticker -->
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" aria-labelledby="h-faq">
+      <div class="container">
+        <header class="section-head">
+          <h2 id="h-faq">Perguntas frequentes</h2>
+          <p class="sub">O básico que todo projeto pergunta.</p>
+        </header>
+
+        <div class="faq">
+          <details>
+            <summary>Qual é o prazo típico?</summary>
+            <p>Landing pages: 1–2 semanas. Sites institucionais: 2–4 semanas. Projetos maiores (com integrações): sob estimativa após o discovery.</p>
+          </details>
+          <details>
+            <summary>O que eu preciso fornecer?</summary>
+            <p>Logo, paleta/identidade (se houver), textos e imagens base. Se preferir, ajudamos com copy e curadoria de imagens.</p>
+          </details>
+          <details>
+            <summary>Como funciona o pagamento?</summary>
+            <p>Dividimos por marcos (ex.: 50% início, 50% entrega) ou conforme combinarmos na proposta.</p>
+          </details>
+          <details>
+            <summary>Vocês hospedam o site?</summary>
+            <p>Publicamos em Github/Vercel/AWS/Hostinger e configuramos seu domínio. A infraestrutura pode ficar na sua conta.</p>
+          </details>
+          <details>
+            <summary>Há suporte após o go-live?</summary>
+            <p>Sim. Oferecemos planos de evolução contínua para melhorias, conteúdos e otimizações.</p>
+          </details>
+        </div>
+
+        <div class="cta-stack">
+          <a
+            class="btn primary"
+            href="PDF/Passo a passo - como a Fyncode faz seu site.pdf"
+            download="Passo-a-Passo-Fyncode.pdf"
+            type="application/pdf"
+            aria-label="Baixar PDF passo a passo (arquivo: Passo-a-Passo-Fyncode.pdf)"
+          >
+            Baixar PDF passo a passo
+          </a>
+          <a class="btn secondary" href="index.html#para-quem">Ver se é pra mim</a>
+          <a
+            class="btn big animate white"
+            href="https://wa.me/5543998306408?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20falar%20com%20a%20Fyncode."
+            target="_blank" rel="noopener noreferrer"
+            aria-label="Abrir conversa no WhatsApp com a Fyncode"
+          >
+            Entre em contato
+            <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <!-- seta ↗ -->
+              <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="7 7, 17 7, 17 17" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div> <!-- cta-stack -->
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <p>© <span id="year"></span> Fyncode — Tecnologia e Identidade</p>
+        <a href="index.html" class="back-to-top">Voltar ao início ↑</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
