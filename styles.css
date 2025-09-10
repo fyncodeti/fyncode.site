@@ -35,19 +35,17 @@ img{ max-width:100%; display:block }
 
 h1, h2, h3, .brand-title { font-family: var(--font-display); }
 
-
-
 /* plasma (fundo aurora roxo) */
- .page{ position:relative; min-height:100svh; overflow:clip; isolation:isolate }
+.page{ position:relative; min-height:100svh; overflow:clip; isolation:isolate }
 .plasma{
   position:absolute; inset:0; z-index:0; pointer-events:none;
 
   /* posições animadas */
   --x1: 20%; --y1: 70%;
-  --x2: 80%; --y2: 30%; 
+  --x2: 80%; --y2: 30%;
 
   /* camadas */
-   background:
+  background:
     radial-gradient(55% 65% at var(--x1) var(--y1), rgba(132,53,255,.40), transparent 60%),
     radial-gradient(45% 60% at var(--x2) var(--y2), rgba(94,42,232,.35), transparent 62%),
     radial-gradient(120% 100% at 50% 100%, rgba(20,0,40,.60), transparent 60%),
@@ -88,12 +86,65 @@ h1 .tight{ display:block; font-size:var(--h1-tight); letter-spacing:.065em }
 .section-head h2{ font-size:var(--h2); margin:0 0 8px; letter-spacing:.10em }
 .section-head .lead{ color:var(--muted); letter-spacing:.10em }
 
-/* chips */
-.techs{ display:flex; flex-wrap:wrap; gap:12px; margin-top:22px }
+/* chips (baseline) */
+.techs{ display:flex; flex-wrap:wrap; gap:12px; margin-top:22px } /* (não usada no marquee novo, pode manter para outros lugares) */
 .chip{
   display:inline-flex; align-items:center; padding:10px 14px; border-radius:999px;
   background: var(--glass); border:1px solid var(--glass-border);
   letter-spacing:.14em; font-weight:700;
+  white-space: nowrap; /* garante uma linha só no ticker */
+}
+
+/* === NOVO: marquee/ticker para as techs === */
+.techs-marquee{
+  display:grid;
+  gap:.6rem;
+  margin-top:22px;
+}
+.tech-lane{
+  --gap: 12px;     /* espaço entre chips */
+  --speed: 28s;    /* velocidade base da faixa */
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  background: var(--glass);
+
+  /* fade nas laterais (compatível WebKit) */
+  mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+.tech-lane:hover .tech-track{ animation-play-state: paused; } /* pausa no hover */
+
+.tech-inner{
+  display:flex;
+  gap: var(--gap);
+  padding: 10px;
+}
+
+/* trilho duplicado para loop contínuo */
+.tech-track{
+  display:inline-flex;
+  align-items:center;
+  gap: var(--gap);
+  animation: tech-scroll var(--speed) linear infinite;
+  will-change: transform;
+}
+.tech-lane.reverse .tech-track{ animation-direction: reverse; }
+
+@keyframes tech-scroll{
+  from{ transform: translateX(0); }
+  to  { transform: translateX(-50%); } /* metade porque há 2 trilhos idênticos */
+}
+
+/* acelera um pouco em telas largas para sensação fluida */
+@media (width >= 1200px){
+  .tech-lane{ --speed: 24s; }
+}
+
+/* acessibilidade: respeitar redução de movimento */
+@media (prefers-reduced-motion: reduce){
+  .tech-track{ animation: none !important; }
 }
 
 /* audiences */
@@ -252,7 +303,6 @@ h1 .tight{ display:block; font-size:var(--h1-tight); letter-spacing:.065em }
 
 /* parallax sutil do plasma */
 .plasma.parallax{ transition: transform .05s linear; }
-
 
 /* ===== Cursor dot branco ===== */
 .cursor-dot{

@@ -50,6 +50,7 @@
         <div class="actions">
           <a class="btn primary" href="#conheca">Conheça a Fyncode</a>
           <a class="btn secondary" href="#para-quem">Para quem é</a>
+          <a class="btn secondary" href="como-funciona.html">Como funciona?</a>
           <a
             class="btn big animate white"
             href="https://wa.me/5543998306408?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20falar%20com%20a%20Fyncode."
@@ -88,16 +89,58 @@
           </p>
         </header>
 
-        <!-- Tecnologias -->
-        <div class="techs">
-          <span class="chip">Product Design</span>
-          <span class="chip">HTML/CSS</span>
-          <span class="chip">UX/UI</span>
-          <span class="chip">JavaScript</span>
-          <span class="chip">Shopify</span>
-          <span class="chip">Nuvemshop</span>
-          <span class="chip">Figma</span>
+        <!-- Tecnologias — marquee/ticker -->
+        <div class="techs-marquee" aria-label="Tecnologias e competências">
+          <!-- faixa 1 (anda para a esquerda) -->
+          <div class="tech-lane">
+            <div class="tech-inner">
+              <div class="tech-track">
+                <span class="chip">Product Design</span>
+                <span class="chip">HTML/CSS</span>
+                <span class="chip">UX/UI</span>
+                <span class="chip">JavaScript</span>
+                <span class="chip">Shopify</span>
+                <span class="chip">Nuvemshop</span>
+                <span class="chip">Figma</span>
+              </div>
+              <!-- duplicata para loop contínuo -->
+              <div class="tech-track" aria-hidden="true">
+                <span class="chip">Product Design</span>
+                <span class="chip">HTML/CSS</span>
+                <span class="chip">UX/UI</span>
+                <span class="chip">JavaScript</span>
+                <span class="chip">Shopify</span>
+                <span class="chip">Nuvemshop</span>
+                <span class="chip">Figma</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- faixa 2 (anda para a direita) -->
+          <div class="tech-lane reverse" aria-hidden="true">
+            <div class="tech-inner">
+              <div class="tech-track">
+                <span class="chip">Figma</span>
+                <span class="chip">Nuvemshop</span>
+                <span class="chip">Shopify</span>
+                <span class="chip">JavaScript</span>
+                <span class="chip">UX/UI</span>
+                <span class="chip">HTML/CSS</span>
+                <span class="chip">Product Design</span>
+              </div>
+              <div class="tech-track" aria-hidden="true">
+                <span class="chip">Figma</span>
+                <span class="chip">Nuvemshop</span>
+                <span class="chip">Shopify</span>
+                <span class="chip">JavaScript</span>
+                <span class="chip">UX/UI</span>
+                <span class="chip">HTML/CSS</span>
+                <span class="chip">Product Design</span>
+              </div>
+            </div>
+          </div>
         </div>
+
 
         <!-- CTA da seção -->
         <div class="section-cta">
