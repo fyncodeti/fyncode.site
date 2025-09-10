@@ -68,7 +68,7 @@ h1, h2, h3, .brand-title { font-family: var(--font-display); }
 .brand-logo{ height: calc(var(--navH) - 8px); width:auto }
 .brand-wordmark{ display:flex; flex-direction:column; line-height:1; transform: translateY(1px) }
 .brand-title{ font-weight:600; letter-spacing:.10em; font-size: clamp(14px, 2.1vw, 18px) }
-.brand-sub{ margin-top:2px; font-weight:600; opacity:.95; letter-spacing:.22em; font-size: clamp(9px, 1.3vw, 11px) }
+.brand-sub{ margin-top:2px; font-weight:600; opacity:.95; letter-spacing:.22em; font-size: clamp(6.5px, 0.3vw, 11px) }
 
 .nav{ display:flex; gap:22px }
 .nav-link{ letter-spacing:.14em; padding:10px 6px; border-radius:10px; opacity:.85 }
