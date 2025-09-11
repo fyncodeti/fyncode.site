@@ -32,7 +32,21 @@
     }
 
     /* fluxo (etapas) */
-    .flow{ counter-reset: step; display:grid; gap:14px; margin-top:20px }
+    /* 🔧 reset do <ol>/<ul> para remover o recuo padrão */
+    ol.flow, ul.flow{
+      margin: 20px 0 0;      /* mantém seu margin-top, remove margin-left padrão */
+      padding: 0;            /* zera o padding que causava "torto" no mobile */
+      list-style: none;      /* garante sem marcadores/numeração do UA */
+      padding-inline-start: 0; /* extra safety para Safari/WebKit */
+    }
+
+    .flow{
+      counter-reset: step;
+      display:grid;
+      gap:14px;
+      margin-top:20px;
+      padding:0;             /* ✅ zera qualquer padding residual */
+    }
     @media (width >= 880px){
       .flow{ grid-template-columns: repeat(2, minmax(0,1fr)); }
     }

@@ -21,22 +21,61 @@
     <!-- NAV fixa (60px) -->
     <header class="topbar" role="banner">
       <a class="brand" href="#home" aria-label="Voltar ao início">
-        <!-- símbolo à esquerda -->
         <img class="brand-logo" src="img/Logo-03.svg" alt="Fyncode" />
-        <!-- wordmark à direita -->
         <span class="brand-wordmark">
           <strong class="brand-title">FYNCODE</strong>
           <small class="brand-sub">TECNOLOGIA E IDENTIDADE</small>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Navegação principal">
+      <!-- nav desktop -->
+      <nav class="nav nav-desktop" aria-label="Navegação principal">
         <a href="#home" class="nav-link">Início</a>
         <a href="#conheca" class="nav-link">Conheça</a>
         <a href="#para-quem" class="nav-link">Para quem</a>
         <a href="como-funciona.html" class="nav-link">Como funciona</a>
       </nav>
+
+      <!-- botão mobile: aparece só em telas pequenas -->
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+      >
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+        <span class="nav-toggle-bar" aria-hidden="true"></span>
+      </button>
     </header>
+
+    <!-- drawer de navegação mobile -->
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <div class="mobile-menu__panel" role="dialog" aria-modal="true" aria-label="Menu">
+        <nav class="mobile-menu__nav">
+          <a href="#home" class="mobile-link">Início</a>
+          <a href="#conheca" class="mobile-link">Conheça</a>
+          <a href="#para-quem" class="mobile-link">Para quem</a>
+          <a href="como-funciona.html" class="mobile-link">Como funciona</a>
+          <a
+            class="btn big animate white w-100"
+            href="https://wa.me/5543998306408?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20falar%20com%20a%20Fyncode."
+            target="_blank" rel="noopener noreferrer"
+          >
+            Falar no WhatsApp
+            <svg class="arrow" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="7 7, 17 7, 17 17" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </nav>
+      </div>
+      <button class="mobile-menu__backdrop" tabindex="-1" aria-hidden="true"></button>
+    </div>
+
 
     <!-- HERO -->
     <section id="home" class="section hero" aria-labelledby="h-home">

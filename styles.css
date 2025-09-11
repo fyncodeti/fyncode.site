@@ -72,6 +72,214 @@ h1, h2, h3, .brand-title { font-family: var(--font-display); }
 .nav-link{ letter-spacing:.14em; padding:10px 6px; border-radius:10px; opacity:.85 }
 .nav-link:hover{ background:var(--glass) }
 
+/* ====== Mobile nav (hambúrguer + drawer) ====== */
+
+/* botão hambúrguer — versão bonita & interativa */
+/* botão */
+.nav-toggle{
+  display: inline-flex;             /* já tinha */
+  flex-direction: column;           /* ✅ empilha as barras */
+  align-items: center;
+  justify-content: center;
+  gap: 6px;                         /* espaçamento vertical entre barras */
+  position: relative;
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+  backdrop-filter: blur(8px) saturate(120%);
+  transition: transform .16s ease, box-shadow .22s ease, background .2s ease, border-color .2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-toggle:hover{
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.28),
+    0 0 0 1px rgba(132,53,255,.30) inset,
+    0 0 24px rgba(132,53,255,.20);
+  border-color: rgba(132,53,255,.45);
+}
+.nav-toggle:active{ transform: translateY(0) scale(.98); }
+.nav-toggle:focus-visible{
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(132,53,255,.4),
+    0 10px 24px rgba(0,0,0,.28);
+}
+
+/* brilho giratório sutil no contorno */
+.nav-toggle::before{
+  content:"";
+  position:absolute; inset:-1px;
+  border-radius: inherit;
+  padding: 1px;
+  background:
+    radial-gradient(90% 80% at 50% 0%, rgba(132,53,255,.35), transparent 60%),
+    conic-gradient(from 0deg,
+      rgba(132,53,255,.00),
+      rgba(132,53,255,.65),
+      rgba(94,42,232,.65),
+      rgba(132,53,255,.00));
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity:.6;
+  filter: blur(.3px);
+  animation: ringSpin 6s linear infinite;
+  pointer-events:none;
+}
+@keyframes ringSpin{
+  to{ transform: rotate(360deg); }
+}
+/* pausa se o usuário prefere menos movimento */
+@media (prefers-reduced-motion: reduce){
+  .nav-toggle::before{ animation:none }
+}
+
+/* barras */
+.nav-toggle-bar{
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,.85), rgba(255,255,255,.65));
+  box-shadow: 0 0 1px rgba(0,0,0,.35);
+  transform-origin: 50% 50%;        /* ✅ centro */
+  transition: transform .22s cubic-bezier(.2,.7,.2,1), opacity .18s ease, width .22s ease;
+}
+
+/* mantém as transições */
+.nav-toggle .nav-toggle-bar{
+  transition: transform .22s cubic-bezier(.2,.7,.2,1), opacity .18s ease, width .22s ease;
+}
+
+/* morph para X */
+.nav-toggle.is-open .nav-toggle-bar:nth-child(1){
+  transform: translateY(8px) rotate(45deg);
+  width: 24px;
+}
+.nav-toggle.is-open .nav-toggle-bar:nth-child(2){
+  opacity: 0;
+  transform: translateX(6px);
+}
+.nav-toggle.is-open .nav-toggle-bar:nth-child(3){
+  transform: translateY(-8px) rotate(-45deg);
+  width: 24px;
+}
+
+/* ripple no clique */
+.nav-toggle .rpl{
+  position:absolute; border-radius:50%;
+  inset:0; margin:auto; width:10px; height:10px;
+  background: radial-gradient(circle, rgba(255,255,255,.22), rgba(255,255,255,0) 60%);
+  transform: scale(0);
+  animation: ripple .5s ease-out forwards;
+  pointer-events:none;
+  mix-blend-mode: screen;
+}
+@keyframes ripple{
+  to{ transform: scale(16); opacity:0; }
+}
+
+/* drawer + backdrop — FIX */
+.mobile-menu[hidden]{ display:none !important; }
+
+.mobile-menu{
+  position: fixed; inset: 0;
+  z-index: 1000;           /* stack alto, controlado */
+  pointer-events: none;    /* fechado: não intercepta nada */
+}
+
+.mobile-menu__backdrop{
+  position:absolute; inset:0;
+  background: rgba(0,0,0,.32);  /* dim consistente (ajuste aqui se quiser) */
+  opacity: 0;
+  transition: opacity .22s ease;
+  z-index: 1;
+  pointer-events: none;    /* só habilita quando .open */
+}
+
+.mobile-menu__panel{
+  position:absolute; top:0; right:0; height:100%;
+  width:min(92vw, 380px);
+  background: rgba(242,239,232,.06);
+  border-left: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px) saturate(120%);
+  transform: translateX(100%);
+  transition: transform .28s cubic-bezier(.2,.7,.2,1);
+  display:flex; align-items:flex-start; justify-content:flex-start;
+  padding: calc(18px + env(safe-area-inset-top) + 48px) 18px calc(18px + env(safe-area-inset-bottom));
+  box-shadow: -16px 0 40px rgba(0,0,0,.45);
+  z-index: 2;              /* painel acima do backdrop */
+  pointer-events: auto;    /* painel clicável quando visível */
+}
+
+/* estado aberto */
+.mobile-menu.open{ pointer-events: auto; }                  /* container passa a aceitar eventos */
+.mobile-menu.open .mobile-menu__panel{ transform: translateX(0); }
+.mobile-menu.open .mobile-menu__backdrop{
+  opacity: 1;
+  pointer-events: auto;                                     /* clicar fora fecha */
+}
+
+/* botão de fechar dentro do painel (garantia) */
+/* botão X acima do conteúdo, mas pequeno */
+.mobile-menu__close{
+  position:absolute; top:12px; right:12px;
+  width:40px; height:40px; border-radius:12px;
+  background: var(--glass);
+  border:1px solid var(--glass-border);
+  display:inline-flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  z-index: 3;                 /* acima do painel */
+  pointer-events: auto;       /* clicável */
+}
+.mobile-menu__close::before,
+.mobile-menu__close::after{
+  content:""; position:absolute; width:20px; height:2px; border-radius:2px;
+  background: rgba(255,255,255,.85);
+}
+.mobile-menu__close::before{ transform: rotate(45deg); }
+.mobile-menu__close::after{ transform: rotate(-45deg); }
+
+/* estado durante o arrasto (swipe-to-close) */
+.mobile-menu__panel.is-dragging{
+  transition: none !important;
+  cursor: grab;
+}
+.mobile-menu__panel.is-dragging:active{ cursor: grabbing; }
+
+/* links do menu mobile */
+.mobile-menu__nav{
+  display:flex; flex-direction:column;
+  gap:12px; width:100%;
+  margin-top: 8px;
+}
+
+.mobile-link{
+  display:flex; align-items:center; justify-content:center; /* ✅ centraliza texto */
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid var(--glass-border);
+  background: var(--glass);
+  font-weight:700; letter-spacing:.14em;
+  text-align:center;
+}
+
+.mobile-menu .btn.w-100{
+  display:flex; align-items:center; justify-content:center; /* botão grande centralizado */
+  width:100%;
+}
+
+.mobile-link:hover{
+  transform: translateX(2px);
+  box-shadow: 0 8px 22px rgba(0,0,0,.35);
+}
+
 /* sections */
 .section{ padding: clamp(72px, 12vw, 80px) 0 }
 .section-alt{ padding: clamp(20px, 13vw, 120px) 0 }
@@ -87,12 +295,12 @@ h1 .tight{ display:block; font-size:var(--h1-tight); letter-spacing:.065em }
 .section-head .lead{ color:var(--muted); letter-spacing:.10em }
 
 /* chips (baseline) */
-.techs{ display:flex; flex-wrap:wrap; gap:12px; margin-top:22px } /* (não usada no marquee novo, pode manter para outros lugares) */
+.techs{ display:flex; flex-wrap:wrap; gap:12px; margin-top:22px }
 .chip{
   display:inline-flex; align-items:center; padding:10px 14px; border-radius:999px;
   background: var(--glass); border:1px solid var(--glass-border);
   letter-spacing:.14em; font-weight:700;
-  white-space: nowrap; /* garante uma linha só no ticker */
+  white-space: nowrap;
 }
 
 /* === NOVO: marquee/ticker para as techs === */
@@ -102,26 +310,22 @@ h1 .tight{ display:block; font-size:var(--h1-tight); letter-spacing:.065em }
   margin-top:22px;
 }
 .tech-lane{
-  --gap: 12px;     /* espaço entre chips */
-  --speed: 28s;    /* velocidade base da faixa */
+  --gap: 12px;
+  --speed: 28s;
   position: relative;
   overflow: hidden;
   border: 1px solid var(--glass-border);
   border-radius: 16px;
   background: var(--glass);
-
-  /* fade nas laterais (compatível WebKit) */
   mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
 }
-.tech-lane:hover .tech-track{ animation-play-state: paused; } /* pausa no hover */
-
+.tech-lane:hover .tech-track{ animation-play-state: paused; }
 .tech-inner{
   display:flex;
   gap: var(--gap);
   padding: 10px;
 }
-
 /* trilho duplicado para loop contínuo */
 .tech-track{
   display:inline-flex;
@@ -131,18 +335,13 @@ h1 .tight{ display:block; font-size:var(--h1-tight); letter-spacing:.065em }
   will-change: transform;
 }
 .tech-lane.reverse .tech-track{ animation-direction: reverse; }
-
 @keyframes tech-scroll{
   from{ transform: translateX(0); }
-  to  { transform: translateX(-50%); } /* metade porque há 2 trilhos idênticos */
+  to  { transform: translateX(-50%); }
 }
-
-/* acelera um pouco em telas largas para sensação fluida */
 @media (width >= 1200px){
   .tech-lane{ --speed: 24s; }
 }
-
-/* acessibilidade: respeitar redução de movimento */
 @media (prefers-reduced-motion: reduce){
   .tech-track{ animation: none !important; }
 }
@@ -195,7 +394,6 @@ h1 .tight{ display:block; font-size:var(--h1-tight); letter-spacing:.065em }
 .push-right{ margin-left:auto; }
 
 /* CTA WHATSAPP */
-/* centraliza o CTA grande */
 .cta-center{
   display:flex; justify-content:center;
   margin-top: clamp(22px, 4vw, 36px);
@@ -203,38 +401,31 @@ h1 .tight{ display:block; font-size:var(--h1-tight); letter-spacing:.065em }
 
 /* botão “tema claro” */
 .btn.white{
-  background: var(--text);        /* #f2efe8 (seu “branco”) */
-  color: var(--bg);               /* texto preto */
+  background: var(--text);
+  color: var(--bg);
   border-color: rgba(0,0,0,.12);
   box-shadow:
     0 10px 24px rgba(0,0,0,.28),
     0 0 0 1px rgba(0,0,0,.04) inset;
 }
-
-/* brilho suave que “respira” no branco */
 .btn.white.animate{
   background-image:
     linear-gradient(120deg, rgba(255,255,255,0) 35%, rgba(132,53,255,.10) 50%, rgba(255,255,255,0) 65%);
   background-repeat: no-repeat;
   background-size: 200% 200%;
 }
-
-/* hover e foco acessível */
 .btn.white:hover{
   transform: translateY(-2px);
   box-shadow:
     0 14px 32px rgba(0,0,0,.32),
     0 0 0 1px rgba(0,0,0,.06) inset;
 }
-
 .btn.white:focus-visible{
   outline: none;
   box-shadow:
     0 0 0 3px rgba(132,53,255,.40),
     0 12px 30px rgba(0,0,0,.30);
 }
-
-/* animação diagonal da seta (↗) */
 .btn.animate .arrow{
   margin-left: 8px;
   animation: arrowNudgeDiag 1.2s ease-in-out infinite;
@@ -252,7 +443,8 @@ h1 .tight{ display:block; font-size:var(--h1-tight); letter-spacing:.065em }
 
 /* responsive */
 @media (width <= 880px){
-  .nav{ display:none }
+  .nav-desktop{ display:none }  /* esconde a navegação desktop */
+  .nav-toggle{ display:inline-flex }  /* mostra o hambúrguer */
   .brand-sub{ display:none }
 }
 
@@ -310,37 +502,26 @@ h1 .tight{ display:block; font-size:var(--h1-tight); letter-spacing:.065em }
   left: 0; top: 0;
   width: 12px; height: 12px;
   border-radius: 50%;
-  background: #fff;                 /* bolinha branca pura */
+  background: #fff;
   box-shadow: 0 0 0 1px rgba(0,0,0,.18), 0 0 12px rgba(255,255,255,.35);
   pointer-events: none;
   z-index: 9999;
   opacity: .95;
 
-  /* animado via CSS vars: --tx / --ty / --s */
   --tx: -100px; --ty: -100px; --s: 1;
   transform: translate3d(var(--tx), var(--ty), 0) scale(var(--s));
   transition: transform .04s linear, opacity .2s ease;
 }
-
-/* realça perto de elementos interativos */
 .cursor-dot.active{ --s: 1.35; }
-
-/* clique dá um pulso sutil */
 .cursor-dot.pulse{ animation: dotPulse .28s ease-out; }
 @keyframes dotPulse{
   0%   { box-shadow: 0 0 0 0 rgba(255,255,255,.35), 0 0 12px rgba(255,255,255,.35); }
   100% { box-shadow: 0 0 0 16px rgba(255,255,255,0), 0 0 12px rgba(255,255,255,.35); }
 }
-
-/* esconder quando o mouse sai da janela */
 .cursor-dot.hide{ opacity: 0; }
-
-/* não mostra em dispositivos sem hover (mobile/tablet) */
 @media (hover: none){
   .cursor-dot{ display: none !important; }
 }
-
-/* acessibilidade: sem animação se o usuário preferir */
 @media (prefers-reduced-motion: reduce){
   .cursor-dot{ transition: none; }
 }
