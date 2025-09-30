@@ -35,6 +35,14 @@ img{ max-width:100%; display:block }
 
 h1, h2, h3, .brand-title { font-family: var(--font-display); }
 
+#h-home {
+  font-size: clamp(42px, 8vw, 92px);
+}
+
+#h-home .tight {
+  font-size: clamp(38px, 8vw, 92px);
+}
+
 /* plasma (fundo aurora roxo) */
 .page{ position:relative; min-height:100svh; overflow:clip; isolation:isolate }
 .plasma{
